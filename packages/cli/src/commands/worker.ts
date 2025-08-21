@@ -13,6 +13,7 @@ import { PubSubRegistry } from '@/scaling/pubsub/pubsub.registry';
 import { Subscriber } from '@/scaling/pubsub/subscriber.service';
 import type { ScalingService } from '@/scaling/scaling.service';
 import type { WorkerServerEndpointsConfig } from '@/scaling/worker-server';
+import { WorkerStatusService } from '@/scaling/worker-status.service.ee';
 
 import { BaseCommand } from './base-command';
 
@@ -129,12 +130,13 @@ export class Worker extends BaseCommand<z.infer<typeof flagsSchema>> {
 
 		Container.get(PubSubRegistry).init();
 		await Container.get(Subscriber).subscribe('n8n.commands');
+		Container.get(WorkerStatusService);
 	}
 
 	async setConcurrency() {
 		const { flags } = this;
 
-		const envConcurrency = config.getEnv('executions.concurrency.productionLimit');
+		const envConcurrency = this.globalConfig.executions.concurrency.productionLimit;
 
 		this.concurrency = envConcurrency !== -1 ? envConcurrency : flags.concurrency;
 

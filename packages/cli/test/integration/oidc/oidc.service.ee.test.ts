@@ -248,7 +248,7 @@ describe('OIDC service', () => {
 			expect(user.id).toEqual(createdUser.id);
 		});
 
-		it('should throw `BadRequestError` if user already exists out of OIDC system', async () => {
+		it('should sign up the user if user already exists out of OIDC system', async () => {
 			const callbackUrl = new URL(
 				'http://localhost:5678/rest/sso/oidc/callback?code=valid-code&state=valid-state',
 			);
@@ -279,10 +279,12 @@ describe('OIDC service', () => {
 				email: 'user1@example.com',
 			});
 
-			await expect(oidcService.loginUser(callbackUrl)).rejects.toThrowError(BadRequestError);
+			const user = await oidcService.loginUser(callbackUrl);
+			expect(user).toBeDefined();
+			expect(user.email).toEqual('user1@example.com');
 		});
 
-		it('should throw `BadRequestError` if OIDC Idp does not have email verified', async () => {
+		it('should sign in user if OIDC Idp does not have email verified', async () => {
 			const callbackUrl = new URL(
 				'http://localhost:5678/rest/sso/oidc/callback?code=valid-code&state=valid-state',
 			);
@@ -313,7 +315,9 @@ describe('OIDC service', () => {
 				email: 'user3@example.com',
 			});
 
-			await expect(oidcService.loginUser(callbackUrl)).rejects.toThrowError(BadRequestError);
+			const user = await oidcService.loginUser(callbackUrl);
+			expect(user).toBeDefined();
+			expect(user.email).toEqual('user3@example.com');
 		});
 
 		it('should throw `BadRequestError` if OIDC Idp does not provide an email', async () => {
@@ -344,6 +348,79 @@ describe('OIDC service', () => {
 			// Simulate that the user already exists in the database
 			fetchUserInfoMock.mockResolvedValueOnce({
 				email_verified: true,
+			});
+
+			await expect(oidcService.loginUser(callbackUrl)).rejects.toThrowError(BadRequestError);
+		});
+
+		it('should throw `BadRequestError` if OIDC Idp provides an invalid email format', async () => {
+			const callbackUrl = new URL(
+				'http://localhost:5678/rest/sso/oidc/callback?code=valid-code&state=valid-state',
+			);
+
+			const mockTokens: mocked_oidc_client.TokenEndpointResponse &
+				mocked_oidc_client.TokenEndpointResponseHelpers = {
+				access_token: 'mock-access-token-invalid',
+				id_token: 'mock-id-token-invalid',
+				token_type: 'bearer',
+				claims: () => {
+					return {
+						sub: 'mock-subject-invalid',
+						iss: 'https://example.com/auth/realms/n8n',
+						aud: 'test-client-id',
+						iat: Math.floor(Date.now() / 1000) - 1000,
+						exp: Math.floor(Date.now() / 1000) + 3600,
+					} as mocked_oidc_client.IDToken;
+				},
+				expiresIn: () => 3600,
+			} as mocked_oidc_client.TokenEndpointResponse &
+				mocked_oidc_client.TokenEndpointResponseHelpers;
+
+			authorizationCodeGrantMock.mockResolvedValueOnce(mockTokens);
+
+			// Provide an invalid email format
+			fetchUserInfoMock.mockResolvedValueOnce({
+				email_verified: true,
+				email: 'invalid-email-format',
+			});
+
+			const error = await oidcService.loginUser(callbackUrl).catch((e) => e);
+			expect(error.message).toBe('Invalid email format');
+		});
+
+		it.each([
+			['not-an-email'],
+			['@missinglocal.com'],
+			['missing@.com'],
+			['spaces in@email.com'],
+			['double@@domain.com'],
+		])('should throw `BadRequestError` for invalid email <%s>', async (invalidEmail) => {
+			const callbackUrl = new URL(
+				'http://localhost:5678/rest/sso/oidc/callback?code=valid-code&state=valid-state',
+			);
+
+			const mockTokens: mocked_oidc_client.TokenEndpointResponse &
+				mocked_oidc_client.TokenEndpointResponseHelpers = {
+				access_token: 'mock-access-token-multi',
+				id_token: 'mock-id-token-multi',
+				token_type: 'bearer',
+				claims: () => {
+					return {
+						sub: 'mock-subject-multi',
+						iss: 'https://example.com/auth/realms/n8n',
+						aud: 'test-client-id',
+						iat: Math.floor(Date.now() / 1000) - 1000,
+						exp: Math.floor(Date.now() / 1000) + 3600,
+					} as mocked_oidc_client.IDToken;
+				},
+				expiresIn: () => 3600,
+			} as mocked_oidc_client.TokenEndpointResponse &
+				mocked_oidc_client.TokenEndpointResponseHelpers;
+
+			authorizationCodeGrantMock.mockResolvedValueOnce(mockTokens);
+			fetchUserInfoMock.mockResolvedValueOnce({
+				email_verified: true,
+				email: invalidEmail,
 			});
 
 			await expect(oidcService.loginUser(callbackUrl)).rejects.toThrowError(BadRequestError);

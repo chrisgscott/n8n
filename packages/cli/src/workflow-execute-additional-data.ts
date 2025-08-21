@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-use-before-define */
+
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { PushMessage, PushType } from '@n8n/api-types';
-import { Logger } from '@n8n/backend-common';
+import { Logger, ModuleRegistry } from '@n8n/backend-common';
 import { GlobalConfig } from '@n8n/config';
 import { ExecutionRepository, WorkflowRepository } from '@n8n/db';
 import { Container } from '@n8n/di';
@@ -237,6 +237,8 @@ async function startExecution(
 		if (additionalData.httpResponse) {
 			additionalDataIntegrated.httpResponse = additionalData.httpResponse;
 		}
+		// Propagate streaming state to subworkflows
+		additionalDataIntegrated.streamingEnabled = additionalData.streamingEnabled;
 
 		let subworkflowTimeout = additionalData.executionTimeoutTimestamp;
 		const workflowSettings = workflowData.settings;
@@ -375,7 +377,15 @@ export async function getBase(
 
 	const eventService = Container.get(EventService);
 
+	const moduleRegistry = Container.get(ModuleRegistry);
+	const dataStoreProxyProvider = moduleRegistry.isActive('data-store')
+		? Container.get(
+				(await import('@/modules/data-store/data-store-proxy.service')).DataStoreProxyService,
+			)
+		: undefined;
+
 	return {
+		dataStoreProxyProvider,
 		currentNodeExecutionIndex: 0,
 		credentialsHelper: Container.get(CredentialsHelper),
 		executeWorkflow,
@@ -390,6 +400,15 @@ export async function getBase(
 		userId,
 		setExecutionStatus,
 		variables,
+		async getRunExecutionData(executionId) {
+			const executionRepository = Container.get(ExecutionRepository);
+			const executionData = await executionRepository.findSingleExecution(executionId, {
+				unflattenData: true,
+				includeData: true,
+			});
+
+			return executionData?.data;
+		},
 		externalSecretsProxy: Container.get(ExternalSecretsProxy),
 		async startRunnerTask(
 			additionalData: IWorkflowExecuteAdditionalData,

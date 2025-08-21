@@ -38,7 +38,7 @@ const defaultConfig = new MainConfig();
 defaultConfig.jsRunnerConfig ??= {
 	allowedBuiltInModules: '',
 	allowedExternalModules: '',
-	allowPrototypeMutation: true, // needed for jest
+	insecureMode: false,
 };
 
 describe('JsTaskRunner', () => {
@@ -1008,7 +1008,7 @@ describe('JsTaskRunner', () => {
 							code: `return require('${module}')`,
 							inputItems,
 						}),
-					).rejects.toThrow(`Cannot find module '${module}'`);
+					).rejects.toThrow(`Module '${module}' is disallowed`);
 				},
 			);
 
@@ -1020,7 +1020,7 @@ describe('JsTaskRunner', () => {
 							code: `return require('${module}')`,
 							inputItems,
 						}),
-					).rejects.toThrow(`Cannot find module '${module}'`);
+					).rejects.toThrow(`Module '${module}' is disallowed`);
 				},
 			);
 		});
@@ -1138,7 +1138,7 @@ describe('JsTaskRunner', () => {
 							inputItems,
 							runner,
 						}),
-					).rejects.toThrow(`Cannot find module '${moduleName}'`);
+					).rejects.toThrow(`Module '${moduleName}' is disallowed`);
 				},
 			);
 
@@ -1151,7 +1151,7 @@ describe('JsTaskRunner', () => {
 							inputItems,
 							runner,
 						}),
-					).rejects.toThrow(`Cannot find module '${moduleName}'`);
+					).rejects.toThrow(`Module '${moduleName}' is disallowed`);
 				},
 			);
 		});
@@ -1200,7 +1200,7 @@ describe('JsTaskRunner', () => {
 							inputItems,
 							runner,
 						}),
-					).rejects.toThrow(`Cannot find module '${moduleName}'`);
+					).rejects.toThrow(`Module '${moduleName}' is disallowed`);
 				},
 			);
 
@@ -1213,7 +1213,7 @@ describe('JsTaskRunner', () => {
 							inputItems,
 							runner,
 						}),
-					).rejects.toThrow(`Cannot find module '${moduleName}'`);
+					).rejects.toThrow(`Module '${moduleName}' is disallowed`);
 				},
 			);
 		});
@@ -1455,9 +1455,9 @@ describe('JsTaskRunner', () => {
 			expect(Duration.fromObject({ hours: 1 }).maliciousKey).toBeUndefined();
 		});
 
-		it('should allow prototype mutation when `allowPrototypeMutation` is true', async () => {
+		it('should allow prototype mutation when `insecureMode` is true', async () => {
 			const runner = createRunnerWithOpts({
-				allowPrototypeMutation: true,
+				insecureMode: true,
 			});
 
 			const outcome = await executeForAllItems({

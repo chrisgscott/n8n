@@ -257,6 +257,7 @@ const trackWorkflowInputFieldAdded = () => {
 			/>
 			<div v-if="multipleValues">
 				<Draggable
+					:item-key="property.name"
 					v-model="mutableValues[property.name]"
 					handle=".drag-handle"
 					drag-class="dragging"
@@ -314,7 +315,7 @@ const trackWorkflowInputFieldAdded = () => {
 						<N8nIconButton
 							type="tertiary"
 							text
-							size="mini"
+							size="small"
 							icon="trash-2"
 							data-test-id="fixed-collection-delete"
 							:title="locale.baseText('fixedCollectionParameter.deleteItem')"

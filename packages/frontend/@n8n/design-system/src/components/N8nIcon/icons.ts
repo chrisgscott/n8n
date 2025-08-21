@@ -1,8 +1,19 @@
 import Binary from './custom/binary.svg';
 import BoltFilled from './custom/bolt-filled.svg';
+import Continue from './custom/continue.svg';
+import EmptyOutput from './custom/empty-output.svg';
 import GripLinesVertical from './custom/grip-lines-vertical.svg';
-import Json from './custom/json.svg';
+import NodeDirty from './custom/node-dirty.svg';
+import NodeEllipsis from './custom/node-ellipsis.svg';
+import NodeError from './custom/node-error.svg';
+import NodePin from './custom/node-pin.svg';
+import NodePlay from './custom/node-play.svg';
+import NodePower from './custom/node-power.svg';
+import NodeSuccess from './custom/node-success.svg';
+import NodeTrash from './custom/node-trash.svg';
 import PopOut from './custom/pop-out.svg';
+import Retry from './custom/retry.svg';
+import RunOnce from './custom/run-once.svg';
 import Schema from './custom/schema.svg';
 import Spinner from './custom/spinner.svg';
 import StatusCanceled from './custom/status-canceled.svg';
@@ -23,13 +34,17 @@ import IconLucideArrowDown from '~icons/lucide/arrow-down';
 import IconLucideArrowLeft from '~icons/lucide/arrow-left';
 import IconLucideArrowLeftRight from '~icons/lucide/arrow-left-right';
 import IconLucideArrowRight from '~icons/lucide/arrow-right';
+import IconLucideArrowRightFromLine from '~icons/lucide/arrow-right-from-line';
+import IconLucideArrowRightToLine from '~icons/lucide/arrow-right-to-line';
 import IconLucideArrowUp from '~icons/lucide/arrow-up';
 import IconLucideAtSign from '~icons/lucide/at-sign';
 import IconLucideBan from '~icons/lucide/ban';
 import IconLucideBell from '~icons/lucide/bell';
 import IconLucideBook from '~icons/lucide/book';
+import IconLucideBookOpen from '~icons/lucide/book-open';
 import IconLucideBot from '~icons/lucide/bot';
 import IconLucideBox from '~icons/lucide/box';
+import IconLucideBraces from '~icons/lucide/braces';
 import IconLucideBrain from '~icons/lucide/brain';
 import IconLucideBug from '~icons/lucide/bug';
 import IconLucideCalculator from '~icons/lucide/calculator';
@@ -42,6 +57,7 @@ import IconLucideChevronDown from '~icons/lucide/chevron-down';
 import IconLucideChevronLeft from '~icons/lucide/chevron-left';
 import IconLucideChevronRight from '~icons/lucide/chevron-right';
 import IconLucideChevronUp from '~icons/lucide/chevron-up';
+import IconLucideChevronsDownUp from '~icons/lucide/chevrons-down-up';
 import IconLucideChevronsLeft from '~icons/lucide/chevrons-left';
 import IconLucideChevronsUpDown from '~icons/lucide/chevrons-up-down';
 import IconLucideCircle from '~icons/lucide/circle';
@@ -63,6 +79,7 @@ import IconLucideCode from '~icons/lucide/code';
 import IconLucideCog from '~icons/lucide/cog';
 import IconLucideContrast from '~icons/lucide/contrast';
 import IconLucideCopy from '~icons/lucide/copy';
+import IconLucideCrosshair from '~icons/lucide/crosshair';
 import IconLucideDatabase from '~icons/lucide/database';
 import IconLucideEarth from '~icons/lucide/earth';
 import IconLucideEllipsis from '~icons/lucide/ellipsis';
@@ -74,6 +91,7 @@ import IconLucideEyeOff from '~icons/lucide/eye-off';
 import IconLucideFile from '~icons/lucide/file';
 import IconLucideFileArchive from '~icons/lucide/file-archive';
 import IconLucideFileCode from '~icons/lucide/file-code';
+import IconLucideFileDiff from '~icons/lucide/file-diff';
 import IconLucideFileDown from '~icons/lucide/file-down';
 import IconLucideFileInput from '~icons/lucide/file-input';
 import IconLucideFileOutput from '~icons/lucide/file-output';
@@ -125,6 +143,7 @@ import IconLucideMousePointer from '~icons/lucide/mouse-pointer';
 import IconLucideNetwork from '~icons/lucide/network';
 import IconLucidePackageOpen from '~icons/lucide/package-open';
 import IconLucidePalette from '~icons/lucide/palette';
+import IconLucidePanelRight from '~icons/lucide/panel-right';
 import IconLucidePause from '~icons/lucide/pause';
 import IconLucidePen from '~icons/lucide/pen';
 import IconLucidePencil from '~icons/lucide/pencil';
@@ -145,6 +164,7 @@ import IconLucideScissors from '~icons/lucide/scissors';
 import IconLucideSearch from '~icons/lucide/search';
 import IconLucideSend from '~icons/lucide/send';
 import IconLucideServer from '~icons/lucide/server';
+import IconLucideSettings from '~icons/lucide/settings';
 import IconLucideShare from '~icons/lucide/share';
 import IconLucideSlidersHorizontal from '~icons/lucide/sliders-horizontal';
 import IconLucideSmile from '~icons/lucide/smile';
@@ -159,9 +179,11 @@ import IconLucideTags from '~icons/lucide/tags';
 import IconLucideTerminal from '~icons/lucide/terminal';
 import IconLucideThumbsDown from '~icons/lucide/thumbs-down';
 import IconLucideThumbsUp from '~icons/lucide/thumbs-up';
+import IconLucideToggleRight from '~icons/lucide/toggle-right';
 import IconLucideTrash2 from '~icons/lucide/trash-2';
 import IconLucideTreePine from '~icons/lucide/tree-pine';
 import IconLucideTriangleAlert from '~icons/lucide/triangle-alert';
+import IconLucideType from '~icons/lucide/type';
 import IconLucideUndo2 from '~icons/lucide/undo-2';
 import IconLucideUnlink from '~icons/lucide/unlink';
 import IconLucideUser from '~icons/lucide/user';
@@ -198,7 +220,7 @@ export const deprecatedIconSet = {
 	'status-warning': StatusWarning,
 	'vector-square': VectorSquare,
 	schema: Schema,
-	json: Json,
+	json: IconLucideBraces,
 	binary: Binary,
 	text: Text,
 	toolbox: Toolbox,
@@ -400,12 +422,24 @@ export const updatedIconSet = {
 	'status-unknown': StatusUnknown,
 	'status-warning': StatusWarning,
 	'vector-square': VectorSquare,
+	'continue-on-error': Continue,
+	'always-output-data': EmptyOutput,
+	'retry-on-fail': Retry,
+	'execute-once': RunOnce,
 	schema: Schema,
-	json: Json,
+	json: IconLucideBraces,
 	binary: Binary,
 	text: Text,
 	toolbox: Toolbox,
 	spinner: Spinner,
+	'node-dirty': NodeDirty,
+	'node-ellipsis': NodeEllipsis,
+	'node-error': NodeError,
+	'node-pin': NodePin,
+	'node-play': NodePlay,
+	'node-power': NodePower,
+	'node-success': NodeSuccess,
+	'node-trash': NodeTrash,
 
 	// lucide
 	'align-right': IconLucideAlignRight,
@@ -414,11 +448,14 @@ export const updatedIconSet = {
 	'arrow-left': IconLucideArrowLeft,
 	'arrow-left-right': IconLucideArrowLeftRight,
 	'arrow-right': IconLucideArrowRight,
+	'arrow-right-from-line': IconLucideArrowRightFromLine,
+	'arrow-right-to-line': IconLucideArrowRightToLine,
 	'arrow-up': IconLucideArrowUp,
 	'at-sign': IconLucideAtSign,
 	ban: IconLucideBan,
 	bell: IconLucideBell,
 	book: IconLucideBook,
+	'book-open': IconLucideBookOpen,
 	bot: IconLucideBot,
 	box: IconLucideBox,
 	brain: IconLucideBrain,
@@ -434,6 +471,8 @@ export const updatedIconSet = {
 	'chevron-right': IconLucideChevronRight,
 	'chevron-up': IconLucideChevronUp,
 	'chevrons-left': IconLucideChevronsLeft,
+	'chevrons-down-up': IconLucideChevronsDownUp,
+	'chevrons-up-down': IconLucideChevronsUpDown,
 	circle: IconLucideCircle,
 	'circle-alert': IconLucideCircleAlert,
 	'circle-check': IconLucideCircleCheck,
@@ -453,6 +492,7 @@ export const updatedIconSet = {
 	cog: IconLucideCog,
 	contrast: IconLucideContrast,
 	copy: IconLucideCopy,
+	crosshair: IconLucideCrosshair,
 	database: IconLucideDatabase,
 	earth: IconLucideEarth,
 	ellipsis: IconLucideEllipsis,
@@ -464,6 +504,7 @@ export const updatedIconSet = {
 	file: IconLucideFile,
 	'file-archive': IconLucideFileArchive,
 	'file-code': IconLucideFileCode,
+	'file-diff': IconLucideFileDiff,
 	'file-down': IconLucideFileDown,
 	'file-input': IconLucideFileInput,
 	'file-output': IconLucideFileOutput,
@@ -515,6 +556,7 @@ export const updatedIconSet = {
 	network: IconLucideNetwork,
 	'package-open': IconLucidePackageOpen,
 	palette: IconLucidePalette,
+	'panel-right': IconLucidePanelRight,
 	pause: IconLucidePause,
 	pen: IconLucidePen,
 	pencil: IconLucidePencil,
@@ -533,6 +575,7 @@ export const updatedIconSet = {
 	scale: IconLucideScale,
 	scissors: IconLucideScissors,
 	search: IconLucideSearch,
+	settings: IconLucideSettings,
 	send: IconLucideSend,
 	server: IconLucideServer,
 	share: IconLucideShare,
@@ -552,6 +595,8 @@ export const updatedIconSet = {
 	'trash-2': IconLucideTrash2,
 	'tree-pine': IconLucideTreePine,
 	'triangle-alert': IconLucideTriangleAlert,
+	type: IconLucideType,
+	'toggle-right': IconLucideToggleRight,
 	'undo-2': IconLucideUndo2,
 	unlink: IconLucideUnlink,
 	user: IconLucideUser,

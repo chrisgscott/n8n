@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 import type { n8nPage } from '../pages/n8nPage';
 
 export class ProjectComposer {
@@ -10,16 +12,13 @@ export class ProjectComposer {
 	 */
 	async createProject(projectName?: string) {
 		await this.n8n.page.getByTestId('universal-add').click();
-		await Promise.all([
-			this.n8n.page.waitForResponse('**/rest/projects/*'),
-			this.n8n.page.getByTestId('navigation-menu-item').filter({ hasText: 'Project' }).click(),
-		]);
+		await this.n8n.page.getByTestId('navigation-menu-item').filter({ hasText: 'Project' }).click();
 		await this.n8n.notifications.waitForNotificationAndClose('saved successfully');
 		await this.n8n.page.waitForLoadState();
-		const projectNameUnique = projectName ?? `Project ${Date.now()}`;
+		const projectNameUnique = projectName ?? `Project ${nanoid(8)}`;
 		await this.n8n.projectSettings.fillProjectName(projectNameUnique);
 		await this.n8n.projectSettings.clickSaveButton();
-		const projectId = await this.extractProjectIdFromPage('projects', 'settings');
+		const projectId = this.extractProjectIdFromPage('projects', 'settings');
 		return { projectName: projectNameUnique, projectId };
 	}
 
@@ -50,7 +49,7 @@ export class ProjectComposer {
 		return match?.[1] ?? '';
 	}
 
-	async extractProjectIdFromPage(beforeWord: string, afterWord: string): Promise<string> {
+	extractProjectIdFromPage(beforeWord: string, afterWord: string): string {
 		return this.extractIdFromUrl(this.n8n.page.url(), beforeWord, afterWord);
 	}
 }
