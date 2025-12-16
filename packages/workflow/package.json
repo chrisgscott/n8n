@@ -37,6 +37,7 @@
     "dist/**/*"
   ],
   "devDependencies": {
+    "@codemirror/autocomplete": "^6.0.0",
     "@langchain/core": "catalog:",
     "@n8n/config": "workspace:*",
     "@n8n/typescript-config": "workspace:*",
